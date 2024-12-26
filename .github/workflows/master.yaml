@@ -8,9 +8,18 @@ jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4.2.2
             - uses: ./.github/workflows/setup
-            - run: npm run pub
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-                  VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+            
+            - name: npm build
+              run: npm run build
+              shell: bash
+            - name: 查看build文件
+              run: |
+               find dist | xargs ls -ld
+            - name: Upload a Build Artifact
+              uses: actions/upload-artifact@v4.5.0
+              with:
+                name: artifact-quicktype
+                path: dist
+                
